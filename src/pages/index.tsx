@@ -10,7 +10,7 @@ export default function Home() {
                 const response = await fetch(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/");
                 const data = await response.json();
                 setBackendMessage(data.message);
-            } catch (
+            } catch {
                 setBackendMessage("Failed to connect to API");
             }
         };
