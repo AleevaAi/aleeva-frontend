@@ -10,6 +10,7 @@ export default function Home() {
                 const data = await response.json();
                 setBackendMessage(data.message);
             } catch (error) {
+                console.error("Error fetching backend:", error);
                 setBackendMessage("Failed to connect to API");
             }
         };
