@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Welcome to Aleeva AI</h1>
+      <h1>Welcome to Aleeva AI 🎉 </h1>
       <p>Backend Response: {backendMessage}</p>
     </div>
   );
