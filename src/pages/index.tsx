@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 export default function Home() {
@@ -8,7 +8,6 @@ export default function Home() {
   const [videoUrl, setVideoUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showVideo, setShowVideo] = useState(false);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -16,7 +15,6 @@ export default function Home() {
     setLoading(true);
     setError('');
     setVideoUrl('');
-    setShowVideo(false);
 
     try {
       const response = await axios.post(
@@ -33,7 +31,6 @@ export default function Home() {
 
       if (response.data && response.data.video_url) {
         setVideoUrl(response.data.video_url);
-        setShowVideo(true); // Trigger video to appear
       } else {
         setError('No video URL returned from backend.');
       }
@@ -45,20 +42,14 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    if (videoUrl) {
-      setShowVideo(true);
-    }
-  }, [videoUrl]);
-
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6">
         <h1 className="text-3xl font-bold mb-4 text-center">Aleeva AI</h1>
 
-        {/* ✅ HARD-CODED VIDEO FOR TESTING */}
+        {/* ✅ This uses a video host that should always work */}
         <video
-          src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"
+          src="https://cdn.pixabay.com/vimeo/123815522/720p.mp4?width=1280&hash=00718dc2e9c55dc1b88f"
           controls
           autoPlay
           className="w-full rounded-xl border border-gray-300 mb-4"
@@ -88,7 +79,7 @@ export default function Home() {
           <p className="text-red-500 text-center mt-4">{error}</p>
         )}
 
-        {showVideo && videoUrl && (
+        {videoUrl && (
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2 text-center">Your Video:</h2>
             <video
