@@ -27,7 +27,7 @@ export default function Home() {
         }
       );
 
-      console.log("Backend response:", response.data); // 👈 Logs what backend sends
+      console.log("Backend response:", response.data); // 👈 Debug log
 
       if (response.data && response.data.video_url) {
         setVideoUrl(response.data.video_url);
@@ -74,7 +74,7 @@ export default function Home() {
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2 text-center">Your Video:</h2>
             <video
-              key={videoUrl} // 👈 important: force re-render when URL changes
+              key={videoUrl} // 👈 Force re-render if video changes
               src={videoUrl}
               controls
               autoPlay
