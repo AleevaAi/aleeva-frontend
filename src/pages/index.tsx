@@ -27,15 +27,16 @@ export default function Home() {
         }
       );
 
-      console.log('Backend response:', response.data);
+      console.log('✅ Backend response:', response.data);
 
-      if (response.data && response.data.video_url) {
+      if (response.data?.video_url) {
         setVideoUrl(response.data.video_url);
       } else {
         setError('No video URL returned from backend.');
+        console.warn('⚠️ Response missing video_url:', response.data);
       }
     } catch (err) {
-      console.error(err);
+      console.error('❌ Request failed:', err);
       setError('Failed to generate video. Please try again.');
     } finally {
       setLoading(false);
@@ -46,15 +47,6 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6">
         <h1 className="text-3xl font-bold mb-4 text-center">Aleeva AI</h1>
-
-        {/* ✅ This uses a video host that should always work */}
-        <video
-          src="https://cdn.pixabay.com/vimeo/123815522/720p.mp4?width=1280&hash=00718dc2e9c55dc1b88f"
-          controls
-          autoPlay
-          className="w-full rounded-xl border border-gray-300 mb-4"
-        />
-
         <p className="text-center text-gray-600 mb-6">
           Enter your prompt below and let Aleeva generate your video ✨
         </p>
