@@ -55,6 +55,15 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6">
         <h1 className="text-3xl font-bold mb-4 text-center">Aleeva AI</h1>
+
+        {/* ✅ HARD-CODED VIDEO FOR TESTING */}
+        <video
+          src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"
+          controls
+          autoPlay
+          className="w-full rounded-xl border border-gray-300 mb-4"
+        />
+
         <p className="text-center text-gray-600 mb-6">
           Enter your prompt below and let Aleeva generate your video ✨
         </p>
