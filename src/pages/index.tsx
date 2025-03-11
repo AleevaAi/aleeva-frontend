@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function Home() {
@@ -8,6 +8,7 @@ export default function Home() {
   const [videoUrl, setVideoUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showVideo, setShowVideo] = useState(false);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -15,6 +16,7 @@ export default function Home() {
     setLoading(true);
     setError('');
     setVideoUrl('');
+    setShowVideo(false);
 
     try {
       const response = await axios.post(
@@ -27,10 +29,11 @@ export default function Home() {
         }
       );
 
-      console.log("Backend response:", response.data); // 👈 Debug log
+      console.log('Backend response:', response.data);
 
       if (response.data && response.data.video_url) {
         setVideoUrl(response.data.video_url);
+        setShowVideo(true); // Trigger video to appear
       } else {
         setError('No video URL returned from backend.');
       }
@@ -41,6 +44,12 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (videoUrl) {
+      setShowVideo(true);
+    }
+  }, [videoUrl]);
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
@@ -70,11 +79,11 @@ export default function Home() {
           <p className="text-red-500 text-center mt-4">{error}</p>
         )}
 
-        {videoUrl && (
+        {showVideo && videoUrl && (
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2 text-center">Your Video:</h2>
             <video
-              key={videoUrl} // 👈 Force re-render if video changes
+              key={videoUrl}
               src={videoUrl}
               controls
               autoPlay
