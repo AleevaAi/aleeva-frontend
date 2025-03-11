@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -14,7 +14,7 @@ export default function Home() {
 
     setLoading(true);
     setError('');
-    setVideoUrl(null);
+    setVideoUrl('');
 
     try {
       const response = await axios.post(
@@ -27,9 +27,10 @@ export default function Home() {
         }
       );
 
-      const { video_url } = response.data;
-      if (video_url) {
-        setVideoUrl(video_url);
+      console.log("Backend response:", response.data); // 👈 Logs what backend sends
+
+      if (response.data && response.data.video_url) {
+        setVideoUrl(response.data.video_url);
       } else {
         setError('No video URL returned from backend.');
       }
@@ -42,15 +43,15 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-black px-4 py-8 text-white">
-      <div className="w-full max-w-xl bg-gray-900 rounded-2xl shadow-md p-6">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-md p-6">
         <h1 className="text-3xl font-bold mb-4 text-center">Aleeva AI</h1>
-        <p className="text-center text-gray-400 mb-6">
+        <p className="text-center text-gray-600 mb-6">
           Enter your prompt below and let Aleeva generate your video ✨
         </p>
 
         <textarea
-          className="w-full p-4 text-black border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-4 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
           rows={4}
           placeholder="Describe the video you want..."
           value={prompt}
@@ -71,12 +72,13 @@ export default function Home() {
 
         {videoUrl && (
           <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-2 text-center text-white">Your Video:</h2>
+            <h2 className="text-xl font-semibold mb-2 text-center">Your Video:</h2>
             <video
+              key={videoUrl} // 👈 important: force re-render when URL changes
               src={videoUrl}
               controls
-              className="w-full rounded-xl border border-gray-300"
               autoPlay
+              className="w-full rounded-xl border border-gray-300"
             />
           </div>
         )}
