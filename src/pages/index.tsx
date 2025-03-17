@@ -1,46 +1,33 @@
-'use client';
-
 import { useState } from 'react';
 import axios from 'axios';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) return;
-
     setLoading(true);
-    setError('');
     setVideoUrl('');
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/generate`,
-        { prompt },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await axios.post('https://api.aleevaai.com/generate', {
+        prompt,
+      });
 
-      console.log('✅ Backend response:', response.data);
+      const { video_url } = response.data;
 
-      if (response.data?.video_url) {
-        setVideoUrl(response.data.video_url);
-      } else {
-        setError('No video URL returned from backend.');
-        console.warn('⚠️ Response missing video_url:', response.data);
-      }
-    } catch (err) {
-      console.error('❌ Request failed:', err);
-      setError('Failed to generate video. Please try again.');
-    } finally {
-      setLoading(false);
+      // 🔥 Make sure the video URL is absolute
+      const fullUrl = `https://api.aleevaai.com${video_url}`;
+      console.log('✅ Final video URL:', fullUrl);
+
+      setVideoUrl(fullUrl);
+    } catch (error) {
+      console.error('❌ Video generation failed:', error);
+      alert('Failed to generate video');
     }
+
+    setLoading(false);
   };
 
   return (
@@ -50,7 +37,6 @@ export default function Home() {
         <p className="text-center text-gray-600 mb-6">
           Enter your prompt below and let Aleeva generate your video ✨
         </p>
-
         <textarea
           className="w-full p-4 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
           rows={4}
@@ -58,29 +44,26 @@ export default function Home() {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
-
         <button
-          className="w-full mt-4 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition duration-200 disabled:opacity-50"
           onClick={handleGenerate}
           disabled={loading}
+          className="w-full mt-4 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition duration-200 disabled:opacity-50"
         >
           {loading ? 'Generating...' : 'Generate Video'}
         </button>
-
-        {error && (
-          <p className="text-red-500 text-center mt-4">{error}</p>
-        )}
 
         {videoUrl && (
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2 text-center">Your Video:</h2>
             <video
-              key={videoUrl}
               src={videoUrl}
               controls
               autoPlay
+              muted
+              playsInline
               className="w-full rounded-xl border border-gray-300"
             />
+            <p className="text-center mt-2 text-sm text-gray-500">{videoUrl}</p>
           </div>
         )}
       </div>
